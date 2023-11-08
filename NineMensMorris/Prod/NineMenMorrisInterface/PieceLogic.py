@@ -15,7 +15,7 @@ class Locations:
         :param position: int, position on the board (0-23)
         :return: bool, True if the piece was placed successfully, False otherwise
         """
-        if position in self.valid_positions and self.board[position] == 0 and self.piece_count <= self.maxPieces:
+        if position in self.valid_positions and self.board[position] == 0 and self.piece_count[self.current_player] < self.maxPieces:
             self.board[position] = self.current_player
             self.piece_count[self.current_player] += 1  # Update piece count
             self.switch_player()
