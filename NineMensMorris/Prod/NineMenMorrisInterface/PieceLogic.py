@@ -7,6 +7,7 @@ class Locations:
         self.valid_positions = set(range(24))
         # Track the number of pieces for each player
         self.piece_count = {1: 0, 2: 0}
+        self.maxPieces = 9
 
     def place_piece(self, position):
         """
@@ -14,7 +15,7 @@ class Locations:
         :param position: int, position on the board (0-23)
         :return: bool, True if the piece was placed successfully, False otherwise
         """
-        if position in self.valid_positions and self.board[position] == 0:
+        if position in self.valid_positions and self.board[position] == 0 and self.piece_count <= self.maxPieces:
             self.board[position] = self.current_player
             self.piece_count[self.current_player] += 1  # Update piece count
             self.switch_player()
