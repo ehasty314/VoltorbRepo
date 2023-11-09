@@ -1,9 +1,6 @@
-import sys
-sys.path.append('NineMensMorris/Prod/NineMenMorrisInterface')  
 import tkinter as tk
 from tkinter import messagebox
-from PieceLogic import Locations  
-
+from NineMensMorris.Prod.NineMenMorrisInterface.PieceLogic import Locations
 class NineMansMorrisGUI(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -63,25 +60,53 @@ class NineMansMorrisGUI(tk.Tk):
 #else if prompt for p v comp(possibly its own class)
 #construct new board, construct 1 player object, construct playercomp object
 
-
         for row in range(7):
             for col in range(7):
                 if (row, col) in validLoc:
+                    button = tk.Button(self, text='', width=10, height=3)
+                    button.grid(row=row, column=col)
                     index = validLoc.index((row, col))
-                    self.buttons[index] = tk.Button(self, text=' ', width=10, height=3, command=lambda index=index: self.click(index))
-                    self.buttons[index].grid(row=row, column=col)
+                    button.bind('<Button-1>', self.click(index))
+                    self.buttons[index] = button
+
+                    # self.buttons[index] = tk.Button(self, text=' ', width=10, height=3, command=lambda index=index: self.click(index))
+                    # self.buttons[index].grid(row=row, column=col)
                 else:
                     tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
 
-
     def click(self, position):
-        tempPlayer = self.locations.current_player
-        if self.locations.place_piece(position):
-            self.buttons[position].config(text=str(tempPlayer))
-            print(f"Piece placed by {self.locations.current_player} at position {position}")
-        else:
-            print("Invalid move. Try again.")
-            messagebox.showinfo('Invalid', 'Invalid move. Try again.')
+        def move(event):
+            tempPlayer = self.locations.current_player
+            if not self.locations.is_moving_phase:
+                if self.locations.place_piece(position):
+                    self.buttons[position].config(text=str(tempPlayer))
+                    print(f"Piece placed by {self.locations.current_player} at position {position}")
+                else:
+                    print("Invalid move. Try again.")
+                    messagebox.showinfo('Invalid', 'Invalid move. Try again.')
+            else:
+                if self.locations.selected_piece is None:
+                    if self.locations.select_piece(position):
+                        self.buttons[position]['relief'] = tk.SUNKEN
+                else:
+                    old_position = self.locations.selected_piece
+                    if self.locations.move_piece(position):
+                        self.buttons[old_position]['text'] = ''
+                        self.buttons[old_position]['relief'] = tk.RAISED  # Reset the button relief
+                        self.buttons[position]['text'] = '1' if self.locations.current_player == 1 else '2'
+                    else:
+                        print("Invalid move. Try again.")
+                        messagebox.showinfo('Invalid', 'Invalid move. Try again.')
+
+        return move
+
+        # tempPlayer = self.locations.current_player
+        # if self.locations.place_piece(position):
+        #     self.buttons[position].config(text=str(tempPlayer))
+        #     print(f"Piece placed by {self.locations.current_player} at position {position}")
+        # else:
+        #     print("Invalid move. Try again.")
+        #     messagebox.showinfo('Invalid', 'Invalid move. Try again.')
 
 
 if __name__ == '__main__':

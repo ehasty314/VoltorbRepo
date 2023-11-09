@@ -8,6 +8,8 @@ class Locations:
         # Track the number of pieces for each player
         self.piece_count = {1: 0, 2: 0}
         self.maxPieces = 9
+        self.is_moving_phase = False  # Flag to indicate if the game is in moving phase
+        self.selected_piece = None
 
     def place_piece(self, position):
         """
@@ -20,6 +22,8 @@ class Locations:
             self.piece_count[self.current_player] += 1  # Update piece count
             self.switch_player()
             return True
+        elif self.piece_count[self.current_player] == self.maxPieces and self.piece_count[3 - self.current_player] == self.maxPieces:
+            self.is_moving_phase = True
         else:
             print("Invalid move. Try again.")
             return False
@@ -89,6 +93,59 @@ class Locations:
             return True
         else:
             print("Invalid removal. Try again.")
+            return False
+
+    def select_piece(self,position):
+        if self.selected_piece is None and self.board[position] == self.current_player:
+            self.selected_piece = position
+            return True
+        else:
+            print('error selecting')
+            return False
+
+    def move_piece(self, position):
+        # if self.selected_piece is None and self.board[position] == self.current_player:
+        #     self.selected_piece = position
+        #     return True
+        if self.selected_piece:
+            if self.is_adjacent(self.selected_piece, position) and self.board[position] is None:
+                old_position = self.selected_piece
+                self.board[old_position] = 0
+                self.board[position] = self.current_player
+                self.selected_piece = None
+                self.switch_player()
+    def is_adjacent(self, moveFrom, moveTo):
+        neighbors = {
+            0: [1, 3, 8],
+            1: [0, 2, 4],
+            2: [1, 5, 13],
+            3: [0, 4, 6, 9],
+            4: [1, 3, 5],
+            5: [2, 4, 7, 12],
+            6: [3, 7, 10],
+            7: [5, 6, 11],
+            8: [0, 9, 20],
+            9: [3, 8, 10, 17],
+            10: [6, 9, 14],
+            11: [7, 12, 16],
+            12: [5, 11, 13, 19],
+            13: [2, 12, 22],
+            14: [10, 15, 17],
+            15: [14, 16, 18],
+            16: [11, 15, 19],
+            17: [9, 14, 18, 20],
+            18: [15, 17, 19, 21],
+            19: [12, 16, 18, 22],
+            20: [8, 17, 21],
+            21: [18, 20, 22],
+            22: [13, 19, 21],
+        }
+
+        if moveTo in neighbors.get(moveFrom, []) and self.board[moveTo] == 0 and self.current_player == self.board[
+            moveFrom]:
+            return True
+        else:
+            print("Invalid Location.")
             return False
 
 # Example usage
