@@ -1,5 +1,5 @@
 import unittest
-from NineMensMorris.Prod.GameLogic.PieceLogic import Locations
+from NineMensMorris.Prod.NineMenMorrisInterface.PieceLogic import Locations
 
 class TestOccupiedLocations(unittest.TestCase):
 
@@ -14,6 +14,29 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.board[1] = 1
         self.assertFalse(self.game.place_piece(1))
         self.assertEqual(self.game.board[1], 1)
+
+    def test_place_piece_on_same_space_opposing(self):
+        self.game.place_piece(1)
+        self.assertFalse(self.game.place_piece(1))
+
+    def test_place_piece_on_same_space_current(self):
+        self.game.place_piece(1)
+        self.game.place_piece(2)
+        self.assertFalse(self.game.place_piece(1))
+
+    def test_place_piece_over_max(self):
+        # could be dbc conflict
+        for piece in range(9):
+            self.game.place_piece(piece)
+        self.assertFalse(self.game.place_piece(19))
+
+    def can_place_piece_True(self):
+        self.assertTrue(self.game.can_place_place_piece())
+
+    def can_place_piece_FalseOutOfPieces(self):
+        for piece in range(18):
+            self.game.place_piece(piece)
+        self.assertFalse(self.game.can_place_place_piece())
 
     def test_fly_piece_valid(self):
         self.game.board[0] = 1
@@ -39,13 +62,21 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.board[0] = 1
         self.game.board[1] = 1
         self.game.board[2] = 1
-        self.assertTrue(self.game.is_mill(1))
+        self.assertTrue(self.game.is_mill())
+
+    def test_mill_more_pieces(self):
+        self.game.board[3] = 1
+        self.game.board[9] = 2
+        self.game.board[4] = 1
+        self.game.board[19] = 1
+        self.game.board[5] = 1
+        self.assertTrue(self.game.is_mill())
 
     def test_is_mill_false(self):
         self.game.board[0] = 1
         self.game.board[1] = 2
         self.game.board[2] = 1
-        self.assertFalse(self.game.is_mill(1))
+        self.assertFalse(self.game.is_mill())
 
     def test_remove_opponent_piece_valid(self):
         self.game.board[3] = 2
