@@ -58,11 +58,11 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.switch_player()
         self.assertEqual(self.game.current_player, 1)
 
-    def test_is_mill_true(self):
+    def test_update_mill_true(self):
         self.game.board[0] = 1
         self.game.board[1] = 1
         self.game.board[2] = 1
-        self.assertTrue(self.game.is_mill())
+        self.assertTrue(self.game.update_mill())
 
     def test_mill_more_pieces(self):
         self.game.board[3] = 1
@@ -70,13 +70,40 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.board[4] = 1
         self.game.board[19] = 1
         self.game.board[5] = 1
-        self.assertTrue(self.game.is_mill())
+        self.assertTrue(self.game.update_mill())
 
-    def test_is_mill_false(self):
+    def test_update_mill_false(self):
         self.game.board[0] = 1
         self.game.board[1] = 2
         self.game.board[2] = 1
-        self.assertFalse(self.game.is_mill())
+        self.assertFalse(self.game.update_mill())
+
+    def test_update_mill_create_then_remove_mill(self):
+        self.game.board[0] = 1
+        self.game.board[1] = 1
+        self.game.board[2] = 1
+        self.game.update_mill()
+        self.game.board[2] = 0
+        self.assertFalse(self.game.update_mill())
+
+    def test_update_mill_no_new_mill(self):
+        self.game.board[3] = 1
+        self.game.update_mill()
+        self.game.board[9] = 2
+        self.game.update_mill()
+        self.game.board[4] = 1
+        self.game.update_mill()
+        self.game.board[19] = 1
+        self.game.update_mill()
+        self.game.board[5] = 1
+        self.game.update_mill()
+        self.game.board[16] = 2
+        self.assertFalse(self.game.update_mill())
+
+    def test_update_mill_one_piece(self):
+        self.game.board[3] = 1
+        self.game.board[2] = 2
+        self.assertFalse(self.game.update_mill())
 
     def test_remove_opponent_piece_valid(self):
         self.game.board[3] = 2

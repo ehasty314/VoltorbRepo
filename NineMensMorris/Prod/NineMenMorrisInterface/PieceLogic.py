@@ -20,6 +20,8 @@ class Locations:
         self.can_fl00y = {1: False, 2: False}
         #value for player phases: 1 is placing pieces, 2 is moving pieces, 3 is flying pieces
         self.player_phases = {1: 1, 2: 1}
+        self.player_mills = {1: [], 2: []}
+
         
 
     def place_piece(self, position):
@@ -87,26 +89,45 @@ class Locations:
                 if all(self.board[pos] == self.current_player for pos in mill):
                     return True
         return False
-    # def is_mill(self):
-    # Dans, attempt at isMill, requires implementation effort but logic is tested
-    #     mills = [
-    #             [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Horizontal mills in the outer square
-    #             [9, 10, 11], [12, 13, 14], [15, 16, 17],  # Horizontal mills in the middle square
-    #             [18, 19, 20], [21, 22, 23],  # Horizontal mills in the inner square
-    #             [0, 9, 21], [3, 10, 18], [6, 11, 15],  # Vertical mills in the left side
-    #             [1, 4, 7], [16, 19, 22],  # Vertical mills in the middle
-    #             [8, 12, 17], [5, 13, 20], [2, 14, 23]  # Vertical mills in the right side
-    #         ]
-    #     for mill in mills:
-    #         counts = 0
-    #         for position in mill:
-    #             if self.board[position] == 1:
-    #                 counts += 1
-    #             elif self.board[position] == 2:
-    #                 counts -= 1
-    #         if counts == 3 or counts == -3:
-    #             return True
-    #     return False
+
+    def update_mill(self):
+   # upkeeps list of mills for each player. returns True If a new mill has formed since last update.
+   # assumption this method is called after every click
+        mills = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Horizontal mills in the outer square
+                [9, 10, 11], [12, 13, 14], [15, 16, 17],  # Horizontal mills in the middle square
+                [18, 19, 20], [21, 22, 23],  # Horizontal mills in the inner square
+                [0, 9, 21], [3, 10, 18], [6, 11, 15],  # Vertical mills in the left side
+                [1, 4, 7], [16, 19, 22],  # Vertical mills in the middle
+                [8, 12, 17], [5, 13, 20], [2, 14, 23]  # Vertical mills in the right side
+            ]
+        new_mill = False
+        for mill in mills:
+            counts = 0
+            for position in mill:
+                # determine if a player has formed this mill
+                if self.board[position] == 1:
+                    counts += 1
+                elif self.board[position] == 2:
+                    counts -= 1
+            if counts == 3 or counts == -3:
+                # mill detected
+                if counts >= 0:
+                    if mill not in self.player_mills[1]:
+                        self.player_mills[1].append(mill)
+                        new_mill = True
+                else:
+                    if mill not in self.player_mills[2]:
+                        self.player_mills[2].append(mill)
+                        new_mill = True
+            else:
+                # no player has this mill currently. Update list of mills
+                if mill in self.player_mills[1]:
+                    self.player_mills[1].remove(mill)
+                if mill in self.player_mills[2]:
+                    self.player_mills[2].remove(mill)
+
+        return new_mill
 
 
     def remove_opponent_piece(self, position):
@@ -164,6 +185,8 @@ class Locations:
             return True
         else:
             return False
+
+
 
     def is_game_over(self):
         """
