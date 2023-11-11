@@ -21,6 +21,7 @@ class Locations:
         #value for player phases: 1 is placing pieces, 2 is moving pieces, 3 is flying pieces
         self.player_phases = {1: 1, 2: 1}
         self.player_mills = {1: [], 2: []}
+        self.can_remove = False
 
         
 
@@ -180,7 +181,7 @@ class Locations:
           print("Invalid Location.")
           return False
 
-    def can_place_place_piece(self):
+    def can_place_piece(self):
         if self.piece_count[self.current_player] > self.pieces_placed[self.current_player]:
             return True
         else:

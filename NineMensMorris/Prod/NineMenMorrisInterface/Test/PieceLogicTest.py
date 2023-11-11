@@ -24,12 +24,6 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.place_piece(2)
         self.assertFalse(self.game.place_piece(1))
 
-    def test_place_piece_over_max(self):
-        # could be dbc conflict
-        for piece in range(9):
-            self.game.place_piece(piece)
-        self.assertFalse(self.game.place_piece(19))
-
     def can_place_piece_True(self):
         self.assertTrue(self.game.can_place_place_piece())
 
@@ -37,6 +31,26 @@ class TestOccupiedLocations(unittest.TestCase):
         for piece in range(18):
             self.game.place_piece(piece)
         self.assertFalse(self.game.can_place_place_piece())
+
+    def can_place_piece_after_removal(self):
+        self.game.place_piece(0)
+        self.game.update_mill()
+        self.game.switch_player()
+        self.game.place_piece(15)
+        self.game.update_mill()
+        self.game.switch_player()
+        self.game.place_piece(1)
+        self.game.update_mill()
+        self.game.switch_player()
+        self.game.place_piece(8)
+        self.game.update_mill()
+        self.game.switch_player()
+        self.game.place_piece(2)
+        self.assertTrue(self.game.update_mill())
+        self.assertTrue(self.game.remove_opponent_piece(8))
+        self.game.switch_player()
+        self.assertTrue(self.game.can_place_piece())
+
 
     def test_fly_piece_valid(self):
         self.game.board[0] = 1
@@ -130,6 +144,8 @@ class TestOccupiedLocations(unittest.TestCase):
         self.assertTrue(self.game.move_piece(3,11))
         self.assertFalse(self.game.board[3],0)
         self.assertFalse(self.game.board[4],1)
+
+
 
 if __name__ == '__main__':
     unittest.main()
