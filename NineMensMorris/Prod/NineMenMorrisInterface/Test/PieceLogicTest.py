@@ -132,6 +132,21 @@ class TestOccupiedLocations(unittest.TestCase):
         self.assertFalse(self.game.remove_opponent_piece(3))
         self.assertEqual(self.game.board[3], 1)
 
+    def test_remove_opponent_piece_invalid_in_opponents_mill(self):
+        self.game.board[0] = 1
+        self.game.board[1] = 1
+        self.game.board[2] = 1
+        self.game.board[9] = 1
+        self.game.update_mill()
+        self.assertFalse(self.game.remove_opponent_piece(1))
+
+    def test_remove_opponent_piece_valid_opponent_all_mill(self):
+        self.game.board[0] = 1
+        self.game.board[1] = 1
+        self.game.board[2] = 1
+        self.game.update_mill()
+        self.assertTrue(self.game.remove_opponent_piece(1))
+
     def test_move_piece_valid(self):
         self.game.board[3] = 1
         self.game.current_player = 1
@@ -157,6 +172,38 @@ class TestOccupiedLocations(unittest.TestCase):
         self.assertFalse(self.game.move_piece(18,19))
         self.assertEqual(self.game.board[18],1)
         self.assertEqual(self.game.board[19],2)
+
+    def test_move_piece_valid_fly(self):
+        for i in range(18):
+            self.game.place_piece(i)
+            self.game.switch_player()
+        for i in range(1,12,2):
+            self.game.remove_opponent_piece(i)
+            print(f'removed position: {i}')
+        self.game.switch_player()
+        print(f'player: {self.game.current_player}')
+        self.assertTrue(self.game.can_fly())
+        self.assertTrue(self.game.move_piece(13,1))
+        self.assertEqual(self.game.board[13],0)
+        self.assertEqual(self.game.board[1],2)
+
+    def test_can_fly_valid(self):
+        for i in range(18):
+            self.game.place_piece(i)
+            self.game.switch_player()
+        for i in range(1,12,2):
+            self.game.remove_opponent_piece(i)
+        self.game.switch_player()
+        self.assertTrue(self.game.can_fly())
+
+    def test_can_fly_invalid_too_many(self):
+        for i in range(18):
+            self.game.place_piece(i)
+            self.game.switch_player()
+        for i in range(1,10,2):
+            self.game.remove_opponent_piece(i)
+        self.game.switch_player()
+        self.assertFalse(self.game.can_fly())
 
 
 
