@@ -40,7 +40,7 @@ class NineMansMorrisGUI(tk.Tk):
             else:
                 if self.selected_piece != 0:
                     print('where do you want to move')
-                    self.handle_move(button,index)
+                    self.handle_move(index)
                 else:
                     print('select a piece')
                     self.handle_select(index)
@@ -48,6 +48,7 @@ class NineMansMorrisGUI(tk.Tk):
     def handle_remove(self, button, index):
         if self.game.remove_opponent_piece(index):
             button.config(text=str(' '))
+            print(f'player: {self.game.current_player} Pieces remaining: {self.game.piece_count[self.game.current_player] - self.game.pieces_placed[self.game.current_player]}')
             self.game.can_remove = False
             self.game.switch_player()
 
@@ -69,17 +70,23 @@ class NineMansMorrisGUI(tk.Tk):
         else:
             print('not your piece')
 
-    def handle_move(self,button,newspace):
+    def handle_move(self,newspace):
         if self.game.board[newspace] == self.game.current_player:
             self.buttons[self.selected_piece].config(fg='black')
             self.handle_select(newspace)
         else:
             if self.game.move_piece(self.selected_piece, newspace):
                 self.buttons[self.selected_piece].config(text=' ')
+                self.buttons[newspace].config(text=str(self.game.current_player))
+                self.buttons[self.selected_piece].config(fg='black')
+                self.buttons[newspace].config(fg='black')
                 self.selected_piece = 0
-                self.handle_place(button,newspace)
-
-
+                if self.game.update_mill():
+                    print('mill!')
+                    print(f'player {self.game.current_player} can remove an opponents piece')
+                    self.game.can_remove = True
+                else:
+                    self.game.switch_player()
 
 
 if __name__ == '__main__':

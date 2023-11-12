@@ -139,6 +139,10 @@ class TestOccupiedLocations(unittest.TestCase):
         self.assertEqual(self.game.board[3],0)
         self.assertEqual(self.game.board[4],1)
 
+    def test_move_piece_valid_8_to_7(self):
+        self.game.board[8] = 1
+        self.assertTrue(self.game.move_piece(8,7))
+
     def test_move_piece_invalid_not_neighbor(self):
         self.game.board[18] = 1
         self.game.current_player = 1
