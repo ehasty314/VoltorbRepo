@@ -24,15 +24,16 @@ class TestOccupiedLocations(unittest.TestCase):
         self.game.place_piece(2)
         self.assertFalse(self.game.place_piece(1))
 
-    def can_place_piece_True(self):
-        self.assertTrue(self.game.can_place_place_piece())
+    def test_can_place_piece_True(self):
+        self.assertTrue(self.game.can_place_piece())
 
-    def can_place_piece_FalseOutOfPieces(self):
+    def test_can_place_piece_FalseOutOfPieces(self):
         for piece in range(18):
             self.game.place_piece(piece)
-        self.assertFalse(self.game.can_place_place_piece())
+            self.game.switch_player()
+        self.assertFalse(self.game.can_place_piece())
 
-    def can_place_piece_after_removal(self):
+    def test_can_place_piece_after_removal(self):
         self.game.place_piece(0)
         self.game.update_mill()
         self.game.switch_player()
@@ -138,12 +139,20 @@ class TestOccupiedLocations(unittest.TestCase):
         self.assertEqual(self.game.board[3],0)
         self.assertEqual(self.game.board[4],1)
 
-    def test_move_piece_invalid(self):
-        self.game.board[3] = 1
+    def test_move_piece_invalid_not_neighbor(self):
+        self.game.board[18] = 1
         self.game.current_player = 1
-        self.assertTrue(self.game.move_piece(3,11))
-        self.assertFalse(self.game.board[3],0)
-        self.assertFalse(self.game.board[4],1)
+        self.assertFalse(self.game.move_piece(18,20))
+        self.assertEqual(self.game.board[18],1)
+        self.assertEqual(self.game.board[20],0)
+
+    def test_move_piece_invalid_moving_onto_opponent(self):
+        self.game.board[18] = 1
+        self.game.current_player = 1
+        self.game.board[19] = 2
+        self.assertFalse(self.game.move_piece(18,19))
+        self.assertEqual(self.game.board[18],1)
+        self.assertEqual(self.game.board[19],2)
 
 
 

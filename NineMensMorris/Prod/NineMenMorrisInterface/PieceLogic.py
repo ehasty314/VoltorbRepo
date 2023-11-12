@@ -35,6 +35,7 @@ class Locations:
         if position in self.valid_positions and self.board[position] == 0:
             self.board[position] = self.current_player
             print(f"position: {position}, playerval: {self.board[position]}")
+            self.pieces_placed[self.current_player] += 1
             return True
         else:
             print("Invalid move. Try again.")
@@ -140,7 +141,7 @@ class Locations:
         opponent = 3 - self.current_player
         if self.board[position] == opponent:
             self.board[position] = 0
-            self.piece_count[3 - self.current_player] =- 1
+            self.piece_count[3 - self.current_player] -= 1
             return True
         else:
             print("Invalid removal. Try again.")
