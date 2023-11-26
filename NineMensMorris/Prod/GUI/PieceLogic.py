@@ -1,7 +1,5 @@
 #todo add moveValidator,
-import Record
-
-
+import Record 
 
 class Locations:
     def __init__(self):
@@ -20,7 +18,7 @@ class Locations:
         self.player_phases = {1: 1, 2: 1}
         self.player_mills = {1: [], 2: []}
         self.can_remove = False
-        self.log = Record()
+        self.log = Record.Record()
 
         
 
@@ -35,7 +33,7 @@ class Locations:
             self.board[position] = self.current_player
             print(f"position: {position}, playerval: {self.board[position]}")
             self.pieces_placed[self.current_player] += 1
-            log.place_piece(self.current_player,position)
+            self.log.logPlace(self.current_player,position)
             return True
         else:
             print("Invalid move. Try again.")
@@ -63,7 +61,7 @@ class Locations:
         # Move the piece
         self.board[from_position] = 0
         self.board[to_position] = self.current_player
-        log.movepiece(self.current_player,from_position,to_position)
+        self.log.logMove(self.current_player,from_position,to_position)
         return True
 
     def switch_player(self):
@@ -135,7 +133,7 @@ class Locations:
                     self.board[position] = 0
                     self.piece_count[3 - self.current_player] -= 1
                     self.pieces_placed[3 - self.current_player] -= 1
-                    log.logRemove(self.current_player,position)
+                    self.log.logRemove(self.current_player,position)
                     return True
                 else:
                     print("Invalid removal. Try again.")
@@ -184,7 +182,7 @@ class Locations:
             if moveTo in neighbors.get(moveFrom, []) and self.board[moveTo] == 0 and self.current_player == self.board[moveFrom]:
                 self.board[moveTo] = self.board[moveFrom]
                 self.board[moveFrom] = 0
-                log.movepiece(self.current_player,moveFrom,moveTo)
+                self.log.movepiece(self.current_player,moveFrom,moveTo)
                 return True
             else:
                 print("Invalid Location.")
@@ -208,10 +206,10 @@ class Locations:
         Check game state to see if game over has been accomplished
         """
         if self.piece_count.get(1) <= 2:
-            log.writeFile()
+            self.log.writeFile()
             return True
         if self.piece_count.get(2) <= 2:
-            log.writeFile()
+            self.log.writeFile()
             return True
         else:
             return False

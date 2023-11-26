@@ -5,12 +5,12 @@ start location ignored for place and remove
 ending location used for remove
 move used for fly
 """
-import datetime
+from datetime import datetime
 
-class Record(self):
+class Record:
   #region Properties
-  logging
-  fileName
+  logging = " "
+  fileName = ""
   #endregion  
 
   #region constants
@@ -24,25 +24,27 @@ class Record(self):
   #region constructor
   def __init__(self):
     logging = ""
-    fileName = datetime.now() + ".txt"
+    
+    fileName = str(datetime.now())
+    fileName += ".txt"
   #endregion
   
   #region methods
   def logMove(self, player, startLoc, finishLoc):
-    logging.append(move + delimiter + player + delimiter + startLoc + delimiter + finishLoc + '\newline')
+    self.logging.append(self.move + self.delimiter + player + self.delimiter + startLoc + self.delimiter + finishLoc + '\newline')
 
   def logRemove(self,player,removedLoc):
-    logging.append(remove + delimiter + player + delimiter + unused + delimiter + removedLoc + '\newline')
+    self.logging.append(self.remove + self.delimiter + player + self.delimiter + self.unused + self.delimiter + removedLoc + '\newline')
 
   def logPlace(self,player,placedLoc):
-    logging.append(place + delimiter + player + delimiter + unused + delimiter + placedLoc + '\newline')
+    self.logging.join([self.place,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(placedLoc),'\newline'])
 
   def writeFile(self):
-    file = open("..\\NineMensMorris\\Prod\Log\\" + fileName,"w+")
-    file.write(logging)
+    file = open("..\\NineMensMorris\\Prod\Log\\" + self.fileName,"w+")
+    file.write(self.logging)
     file.close()
 
-print(filename)
+
   #endregion
     
 
