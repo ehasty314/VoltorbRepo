@@ -31,16 +31,16 @@ class Record:
   
   #region methods
   def logMove(self, player, startLoc, finishLoc):
-    self.logging.append(self.move + self.delimiter + player + self.delimiter + startLoc + self.delimiter + finishLoc + '\newline')
+    self.logging.join([self.move,self.delimiter,str(player),self.delimiter,str(startLoc),self.delimiter,str(finishLoc),'\newline'])
 
   def logRemove(self,player,removedLoc):
-    self.logging.append(self.remove + self.delimiter + player + self.delimiter + self.unused + self.delimiter + removedLoc + '\newline')
+    self.logging.join([self.remove,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(removedLoc),'\newline'])
 
   def logPlace(self,player,placedLoc):
     self.logging.join([self.place,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(placedLoc),'\newline'])
 
   def writeFile(self):
-    file = open("..\\NineMensMorris\\Prod\Log\\" + self.fileName,"w+")
+    file = open(".Log\\" + self.fileName,"w+")
     file.write(self.logging)
     file.close()
 

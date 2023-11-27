@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from NineMensMorris.Prod.NineMenMorrisInterface.PieceLogic import Locations
+from PieceLogic import Locations
 class NineMansMorrisGUI(tk.Tk):
     def __init__(self):
         super().__init__()

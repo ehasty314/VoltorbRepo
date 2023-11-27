@@ -182,7 +182,7 @@ class Locations:
             if moveTo in neighbors.get(moveFrom, []) and self.board[moveTo] == 0 and self.current_player == self.board[moveFrom]:
                 self.board[moveTo] = self.board[moveFrom]
                 self.board[moveFrom] = 0
-                self.log.movepiece(self.current_player,moveFrom,moveTo)
+                self.log.logMove(self.current_player,moveFrom,moveTo)
                 return True
             else:
                 print("Invalid Location.")
