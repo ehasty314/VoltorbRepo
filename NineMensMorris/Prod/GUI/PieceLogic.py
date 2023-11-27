@@ -1,6 +1,5 @@
 #todo add moveValidator,
-import Record
-
+import Record 
 
 class Locations:
     def __init__(self):
@@ -19,7 +18,8 @@ class Locations:
         self.player_phases = {1: 1, 2: 1}
         self.player_mills = {1: [], 2: []}
         self.can_remove = False
-        self.log = Record()
+        self.log = Record.Record()
+
         
 
     def place_piece(self, position):
@@ -33,7 +33,7 @@ class Locations:
             self.board[position] = self.current_player
             print(f"position: {position}, playerval: {self.board[position]}")
             self.pieces_placed[self.current_player] += 1
-            log.place_piece(self.current_player,position)
+            self.log.logPlace(self.current_player,position)
             return True
         else:
             print("Invalid move. Try again.")
@@ -61,7 +61,7 @@ class Locations:
         # Move the piece
         self.board[from_position] = 0
         self.board[to_position] = self.current_player
-        log.movepiece(self.current_player,from_position,to_position)
+        self.log.logMove(self.current_player,from_position,to_position)
         return True
 
     def switch_player(self):
@@ -133,7 +133,7 @@ class Locations:
                     self.board[position] = 0
                     self.piece_count[3 - self.current_player] -= 1
                     self.pieces_placed[3 - self.current_player] -= 1
-                    log.logRemove(self.current_player,position)
+                    self.log.logRemove(self.current_player,position)
                     return True
                 else:
                     print("Invalid removal. Try again.")
@@ -182,7 +182,7 @@ class Locations:
             if moveTo in neighbors.get(moveFrom, []) and self.board[moveTo] == 0 and self.current_player == self.board[moveFrom]:
                 self.board[moveTo] = self.board[moveFrom]
                 self.board[moveFrom] = 0
-                log.movepiece(self.current_player,moveFrom,moveTo)
+                self.log.movepiece(self.current_player,moveFrom,moveTo)
                 return True
             else:
                 print("Invalid Location.")
@@ -206,8 +206,10 @@ class Locations:
         Check game state to see if game over has been accomplished
         """
         if self.piece_count.get(1) <= 2:
+            self.log.writeFile()
             return True
         if self.piece_count.get(2) <= 2:
+            self.log.writeFile()
             return True
         else:
             return False
@@ -215,58 +217,9 @@ class Locations:
     def increment_turn(self):
         self.turn_count += 1
 
-    # neighbors = {
-    # 0: [1, 3, 8],
-    # 1: [0, 2, 4],
-    # 2: [1, 5, 13],
-    # 3: [0, 4, 6, 9],
-    # 4: [1, 3, 5],
-    # 5: [2, 4, 7, 12],
-    # 6: [3, 7, 10],
-    # 7: [5, 6, 11],
-    # 8: [0, 9, 20],
-    # 9: [3, 8, 10, 17],
-    # 10: [6, 9, 14],
-    # 11: [7, 12, 16],
-    # 12: [5, 11, 13, 19],
-    # 13: [2, 12, 22],
-    # 14: [10, 15, 17],
-    # 15: [14, 16, 18],
-    # 16: [11, 15, 19],
-    # 17: [9, 14, 18, 20],
-    # 18: [15, 17, 19, 21],
-    # 19: [12, 16, 18, 22],
-    # 20: [8, 17, 21],
-    # 21: [18, 20, 22],
-    # 22: [13, 19, 21],
-    # }
 
-    def can_place_piece(self):
-        if self.piece_count[self.current_player] > self.pieces_placed[self.current_player]:
-            return True
-        else:
-            return False
-
-    def can_fly(self):
-        if self.piece_count[self.current_player] == 3:
-            return True
-        return False
-
-
-
-    def is_game_over(self):
-        """
-        Check game state to see if game over has been accomplished
-        """
-        if self.piece_count.get(1) <= 2:
-            log.writeFile()
-            return True
-        if self.piece_count.get(2) <= 2:
-            log.writeFile()
-            return True
-        else:
-            return False
-
-    def increment_turn(self):
-        self.turn_count += 1
         
+
+
+
+
