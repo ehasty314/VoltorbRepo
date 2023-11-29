@@ -6,6 +6,7 @@ ending location used for remove
 move used for fly
 """
 from datetime import datetime
+import os
 
 class Record:
   #region Properties
@@ -23,10 +24,7 @@ class Record:
 
   #region constructor
   def __init__(self):
-    logging = ""
-    
-    fileName = str(datetime.now())
-    fileName += ".txt"
+    self.logging = ""
   #endregion
   
   #region methods
@@ -40,11 +38,33 @@ class Record:
     self.logging.join([self.place,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(placedLoc),'\newline'])
 
   def writeFile(self):
-    file = open(".Log\\" + self.fileName,"w+")
-    file.write(self.logging)
-    file.close()
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_name = f"{current_time}.txt"
 
+    # Adjust the path to the Log directory
+    log_dir = os.path.join(".", "Log")
 
+    # Check and create the directory if it doesn't exist
+    if not os.path.exists(log_dir):
+        try:
+            os.makedirs(log_dir)
+            print(f"Directory created: {log_dir}")
+        except Exception as e:
+            print(f"Error creating directory: {e}")
+            return
+
+    # Construct the full file path
+    file_path = os.path.join(log_dir, file_name)
+
+    # Attempt to write to the file
+    try:
+        with open(file_path, "w+") as file:
+            file.write(self.logging)
+        print(f"File written successfully: {file_path}")
+    except Exception as e:
+        print(f"Error writing to file: {e}")
+
+  # def readFile(self):
   #endregion
     
 
