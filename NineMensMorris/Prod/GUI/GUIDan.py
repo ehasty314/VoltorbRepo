@@ -7,19 +7,37 @@ class NineMansMorrisGUI(tk.Tk):
         super().__init__()
         self.title('Nine Mans Morris')
         self.geometry('900x600')
+
+        # Start screen
+        self.start_frame = tk.Frame(self)
+        self.start_frame.pack(expand=True)
+
+        # Buttons for selecting game mode
+        tk.Button(self.start_frame, text="Play vs Computer", command=self.play_vs_computer).pack(pady=10)
+        tk.Button(self.start_frame, text="Play vs Human", command=self.play_vs_human).pack(pady=10)
+
         self.game = Locations()
         self.buttons = {}
         self.button_pressed = False
         self.selected_piece = -1
 
+    def play_vs_computer(self):
+        self.playComp = True
+        self.start_game()
 
-        validLoc = [(0, 0), (0, 3), (0, 6),
-                    (1, 1), (1, 3), (1, 5),
-                    (2, 2), (2, 3), (2, 4),
+    def play_vs_human(self):
+        self.playComp = False
+        self.start_game()
+
+    def start_game(self):
+        # Remove the start screen and set up the game board
+        self.start_frame.destroy()
+        self.setup_board()
+
+    def setup_board(self):
+        validLoc = [(0, 0), (0, 3), (0, 6), (1, 1), (1, 3), (1, 5), (2, 2), (2, 3), (2, 4),
                     (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6),
-                    (4, 2), (4, 3), (4, 4),
-                    (5, 1), (5, 3), (5, 5),
-                    (6, 0), (6, 3), (6, 6)]
+                    (4, 2), (4, 3), (4, 4), (5, 1), (5, 3), (5, 5), (6, 0), (6, 3), (6, 6)]
 
         for row in range(7):
             for col in range(7):
@@ -59,6 +77,8 @@ class NineMansMorrisGUI(tk.Tk):
             print(f'player: {self.game.current_player} Pieces remaining: {self.game.piece_count[self.game.current_player] - self.game.pieces_placed[self.game.current_player]}')
             self.game.can_remove = False
             self.game.switch_player()
+            # if self.playComp == True:
+            #     self.computerMove()
 
     def handle_place(self, button, index):
         if self.game.place_piece(index):
@@ -70,6 +90,8 @@ class NineMansMorrisGUI(tk.Tk):
                 self.game.can_remove = True
             else:
                 self.game.switch_player()
+                # if self.playComp == True:
+                #     self.computerMove()
 
     def handle_select(self,index):
         # select a piece to move if not already done
@@ -100,6 +122,8 @@ class NineMansMorrisGUI(tk.Tk):
                     print(f'player {self.game.current_player} can remove an opponents piece')
                     self.game.can_remove = True
                 else:
+                    # if self.playComp == True:
+                    #     self.computerMove()
                     self.game.switch_player()
 
 if __name__ == '__main__':
