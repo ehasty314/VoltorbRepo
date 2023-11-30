@@ -8,34 +8,40 @@ move used for fly
 from datetime import datetime
 import os
 
-class Record:
+class R:
   #region Properties
-  logging = " "
+  logging = ""
   fileName = ""
   #endregion  
 
   #region constants
   delimiter = "|"
-  place = "placed"
-  remove = "removed"
+  place = "place"
+  remove = "remove"
   move = "move"
   unused = ""
   #endregion
 
   #region constructor
   def __init__(self):
+<<<<<<< HEAD
+    logging = ""
+    fileName = str(datetime.now())
+    fileName += ".txt"
+=======
     self.logging = ""
+>>>>>>> d546a1f1f54d36d8ede447588d4fdcdfe54da658
   #endregion
   
   #region methods
   def logMove(self, player, startLoc, finishLoc):
-    self.logging.join([self.move,self.delimiter,str(player),self.delimiter,str(startLoc),self.delimiter,str(finishLoc),'\newline'])
+    self.logging = self.logging + self.move + self.delimiter + str(player) + self.delimiter + str(startLoc) + self.delimiter + str(finishLoc) + '\n' 
 
   def logRemove(self,player,removedLoc):
-    self.logging.join([self.remove,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(removedLoc),'\newline'])
+    self.logging = self.logging + self.remove + self.delimiter + str(player) + self.delimiter + self.unused + self.delimiter + str(removedLoc) + '\n'
 
   def logPlace(self,player,placedLoc):
-    self.logging.join([self.place,self.delimiter,str(player),self.delimiter,self.unused,self.delimiter,str(placedLoc),'\newline'])
+    self.logging = self.logging + self.place + self.delimiter + str(player) + self.delimiter + self.unused + self.delimiter + str(placedLoc) + '\n'
 
   def writeFile(self):
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -64,10 +70,10 @@ class Record:
     except Exception as e:
         print(f"Error writing to file: {e}")
 
+<<<<<<< HEAD
+    file.close()
+=======
   # def readFile(self):
+>>>>>>> d546a1f1f54d36d8ede447588d4fdcdfe54da658
   #endregion
     
-
-
-
-
