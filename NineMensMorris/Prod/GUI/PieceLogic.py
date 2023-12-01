@@ -1,4 +1,5 @@
 #todo add moveValidator,
+
 from Record import R
 
 class Locations:
@@ -133,7 +134,7 @@ class Locations:
                     self.board[position] = 0
                     self.piece_count[3 - self.current_player] -= 1
                     self.pieces_placed[3 - self.current_player] -= 1
-                    self.log.logRemove(self.current_player,position)
+                    
                     return True
                 else:
                     print("Invalid removal. Try again.")
@@ -142,7 +143,9 @@ class Locations:
             else:
                 self.board[position] = 0
                 self.piece_count[3 - self.current_player] -= 1
+
                 self.pieces_placed[3-self.current_player] -= 1
+                self.log.logRemove(self.current_player,position)
                 return True
         else:
             print("Invalid removal. Try again.")
