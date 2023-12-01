@@ -1,5 +1,5 @@
 #todo add moveValidator,
-import Record 
+from Record import R
 
 class Locations:
     def __init__(self):
@@ -18,7 +18,7 @@ class Locations:
         self.player_phases = {1: 1, 2: 1}
         self.player_mills = {1: [], 2: []}
         self.can_remove = False
-        self.log = Record.Record()
+        self.log = R()
 
         
 
