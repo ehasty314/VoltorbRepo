@@ -115,41 +115,32 @@ class Locations:
     def remove_opponent_piece(self, position):
         """
         Remove an opponent's piece from the board.
-        :param position: int, position on the board (0-23)
-        :return: bool, True if the piece was removed successfully, False otherwise
+        param position int, position on the board (0-23)
+        return bool, True if the piece was removed successfully, False otherwise
         """
         opponent = 3 - self.current_player
-        mill_remove = True
         if self.board[position] == opponent:
-            if position in self.player_mills[opponent]:
-                # if we try to remove a piece in an opponents mill, check to see if there are any pieces
-                # that are not in the opponents mill.
-                # if there is then do not allow removal. Otherwise allow
-                for piece in self.board:
-                    if piece == opponent:
-                        for mill in self.player_mills[opponent]:
-                            if piece in mill:
-                                mill_remove = False
-                if mill_remove:
-                    self.board[position] = 0
-                    self.piece_count[3 - self.current_player] -= 1
-                    self.pieces_placed[3 - self.current_player] -= 1
-                    
-                    return True
-                else:
-                    print("Invalid removal. Try again.")
-                    return False
+         # Check if the piece is part of a mill
+            is_in_mill = any(position in mill for mill in self.player_mills[opponent])
 
+            # Check if all opponent's pieces are in mills
+            all_in_mills = all(any(pos in mill for mill in self.player_mills[opponent]) 
+                           for pos, piece in enumerate(self.board) if piece == opponent)
+
+            if is_in_mill and not all_in_mills:
+                print("Cannot remove a piece from a mill unless all opponent's pieces are in mills.")
+                return False
             else:
+                # Remove the piece
                 self.board[position] = 0
-                self.piece_count[3 - self.current_player] -= 1
-
-                self.pieces_placed[3-self.current_player] -= 1
-                self.log.logRemove(self.current_player,position)
+                self.piece_count[opponent] -= 1
+                self.pieces_placed[opponent] -= 1
+                self.log.logRemove(self.current_player, position)
                 return True
         else:
             print("Invalid removal. Try again.")
             return False
+
     
     def move_piece(self, moveFrom, moveTo):
         # changed neighbors for our board, old neighbors below
