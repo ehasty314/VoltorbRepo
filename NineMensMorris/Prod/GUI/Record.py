@@ -24,13 +24,11 @@ class R:
 
   #region constructor
   def __init__(self):
-<<<<<<< HEAD
     logging = ""
     fileName = str(datetime.now())
     fileName += ".txt"
-=======
     self.logging = ""
->>>>>>> d546a1f1f54d36d8ede447588d4fdcdfe54da658
+
   #endregion
   
   #region methods
@@ -69,11 +67,8 @@ class R:
         print(f"File written successfully: {file_path}")
     except Exception as e:
         print(f"Error writing to file: {e}")
-
-<<<<<<< HEAD
     file.close()
-=======
+
   # def readFile(self):
->>>>>>> d546a1f1f54d36d8ede447588d4fdcdfe54da658
   #endregion
     
