@@ -128,7 +128,7 @@ class Locations:
                 for piece in self.board:
                     if piece == opponent:
                         for mill in self.player_mills[opponent]:
-                            if piece not in mill:
+                            if piece in mill:
                                 mill_remove = False
                 if mill_remove:
                     self.board[position] = 0
