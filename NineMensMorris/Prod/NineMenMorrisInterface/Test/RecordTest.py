@@ -1,16 +1,31 @@
 import unittest
-from NineMensMorris.Prod.GUI.Record import Record
+from Record import R
 import os
-from datetime import datetime
 
 class TestRecord(unittest.TestCase):
-
     def setUp(self):
-        self.log = Record()
+        self.log = R()
 
-    def test_log_Move_Successful(self):
-        self.log.logMove(player=1,startLoc=0,finishLoc=1)
-        self.assertEqual(" ".join([self.log.move,self.log.delimiter,str(1),self.log.delimiter,str(0),self.log.delimiter,str(1),'\newline']),self.log.logging)
+    def test_log_move(self):
+      self.log.logging = ""
+      self.log.logMove(1,1,2)
+      self.assertTrue(self.log.logging == "move|1|1|2\n")
+      self.log.logMove(2,2,3)
+      self.assertTrue(self.log.logging == "move|1|1|2\nmove|2|2|3\n")
+
+    def test_log_place(self):
+      self.log.logging = ""
+      self.log.logPlace(1,1)
+      self.assertTrue(self.log.logging == "place|1||1\n")
+      self.log.logPlace(2,2)
+      self.assertTrue(self.log.logging == "place|1||1\nplace|2||2\n")
+
+    def test_log_remove(self):
+      self.log.logging = ""
+      self.log.logRemove(1,1)
+      self.assertTrue(self.log.logging == "remove|1||1\n")
+      self.log.logRemove(2,2)
+      self.assertTrue(self.log.logging == "remove|1||1\nremove|2||2\n")
 
     def test_writeFile_Success(self):
         self.log.logging = 'Success!'
@@ -26,3 +41,7 @@ class TestRecord(unittest.TestCase):
             print(line.strip())
             self.assertEqual('Success!',line.strip())
 
+      #file.close()
+      #if os.path.isfile(file):
+      #  os.remove(file)
+      

@@ -15,6 +15,7 @@ class NineMansMorrisGUI(tk.Tk):
         # Buttons for selecting game mode
         tk.Button(self.start_frame, text="Play vs Computer", command=self.play_vs_computer).pack(pady=10)
         tk.Button(self.start_frame, text="Play vs Human", command=self.play_vs_human).pack(pady=10)
+        tk.Button(self.start_frame, text="Play Recording", command=self.play_vs_human).pack(pady=10)
 
         self.game = Locations()
         self.buttons = {}
@@ -26,6 +27,10 @@ class NineMansMorrisGUI(tk.Tk):
         self.start_game()
 
     def play_vs_human(self):
+        self.playComp = False
+        self.start_game()
+
+    def play_recording(self):
         self.playComp = False
         self.start_game()
 
