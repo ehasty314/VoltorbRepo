@@ -95,6 +95,14 @@ class Replay(tk.Tk):
     def writeLog(self, file_name):
         data_list = []
         log_dir = os.path.join(".", "Log")
+        # Check and create the directory if it doesn't exist
+        if not os.path.exists(log_dir):
+            try:
+                os.makedirs(log_dir)
+                print(f"Directory created: {log_dir}")
+            except Exception as e:
+                print(f"Error creating directory: {e}")
+                return
 
         file_path = os.path.join(log_dir, file_name)
         with open(file_path, 'r', newline='', encoding='utf-8') as file:

@@ -15,9 +15,9 @@ class NineMansMorrisGUI(tk.Tk):
         print("Start frame created and packed successfully")
 
 class GameFrame(tk.Frame):
-    def __init__(self, master, play_comp):
+    def __init__(self, master):
         super().__init__(master)
-        self.play_comp = play_comp
+        # self.play_comp = play_comp
 
         self.game = Locations()
         self.buttons = {}
@@ -38,18 +38,18 @@ class GameFrame(tk.Frame):
             if (row, col) in valid_loc:
                 index = valid_loc.index((row, col))
                 button = tk.Button(self, text=' ', width=10, height=3,
-                                   command=lambda idx=index: self.handle_click(idx))
+                                   command=lambda idx=index: self.handle_click(self.buttons[idx], idx))
                 button.grid(row=row, column=col)
                 self.buttons[index] = button
             else:
                 tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
-      self.bind_buttons()
+    #   self.bind_buttons()
+    #
+    # def bind_buttons(self):
+    #   for index, button in self.buttons.items():
+    #     button.config(command=lambda idx=index: self.handle_click(self.buttons[index],idx))
 
-    def bind_buttons(self):
-      for index, button in self.buttons.items():
-        button.config(command=lambda idx=index: self.handle_click(idx))
-
-    def handle_click(self, index):
+    def handle_click(self, button,index):
       print("handle_click called")
       
       if self.game.is_game_over():
@@ -58,22 +58,22 @@ class GameFrame(tk.Frame):
       elif self.game.can_remove:
         # always remove if possible
         print('remove opponent piece')
-        self.handle_remove(index)
+        self.handle_remove(button,index)
       else:
         if self.game.can_place_piece():
             # placing phase handling
-            self.handle_place(index)
+            self.handle_place(button,index)
         else:
             # select a piece or move selected piece
             if self.selected_piece != -1:
                 print('where do you want to move')
-                self.handle_move(index)
+                self.handle_move(button,index)
             else:
                 print('select a piece')
-                self.handle_select(index)
+                self.handle_select(button,index)
 
 
-    def handle_remove(self, button, index):
+    def handle_remove(self, button,index):
         print("handle_remove called")
         # GUI update and some logic, removing a piece is always end of turn
         if self.game.remove_opponent_piece(index):
@@ -113,7 +113,7 @@ class GameFrame(tk.Frame):
         if self.game.board[newspace] == self.game.current_player:
             # if the player selects another one of their own pieces, change selected piece
             self.buttons[self.selected_piece].config(fg='black')
-            self.handle_select(newspace)
+            self.handle_select(button,newspace)
         else:
             if self.game.move_piece(self.selected_piece, newspace):
                 # if a valid move occurs, then update the buttons, clear selected piece
@@ -146,12 +146,12 @@ class StartFrame(tk.Frame):
 
     def play_vs_computer(self):
         self.master.withdraw()  # Hide the current frame
-        self.game = GameFrame(self.master, play_comp=True)
+        self.game = GameFrame(self.master)
         self.game.pack()
 
     def play_vs_human(self):
-        self.master.withdraw()
-        self.game = GameFrame(self.master, play_comp=False)
+        self.game = GameFrame(self.master)
+        self.destroy()
         self.game.pack()
 
     def play_recording(self):
