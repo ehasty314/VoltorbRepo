@@ -77,7 +77,6 @@ class NineMansMorrisGUI(tk.Tk):
         22: [19, 21, 23],
         23: [14, 22]
         }
-        x = 0
         # iterate through all board pieces
         for i in self.game.board:
             # if the current space belongs to the current player
