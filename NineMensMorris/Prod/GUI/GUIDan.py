@@ -22,6 +22,17 @@ class NineMansMorrisGUI(tk.Tk):
         self.button_pressed = False
         self.selected_piece = -1
 
+    def switch_player_and_check_game_over(self):
+        self.game.switch_player()
+        self.game.turn_count += 1
+
+        if not self.is_valid_move_possible() and self.game.turn_count > 2 and not self.game.can_fly():
+            print('Game Over! Thanks for playing')
+            self.destroy()
+        elif self.game.is_game_over():
+            print('Game Over! Thanks for playing')
+            self.destroy()
+
     def play_vs_computer(self):
         self.playComp = True
         self.start_game()
@@ -38,6 +49,48 @@ class NineMansMorrisGUI(tk.Tk):
         # Remove the start screen and set up the game board
         self.start_frame.destroy()
         self.setup_board()
+
+    def is_valid_move_possible(self):
+        neighbors = {
+        0: [1, 9],
+        1: [0, 2, 4],
+        2: [1, 14],
+        3: [4, 10],
+        4: [3, 1, 7, 5],
+        5: [4, 13],
+        6: [7, 11],
+        7: [6, 4, 8],
+        8: [7, 12],
+        9: [0, 10, 21],
+        10: [3, 9, 11, 18],
+        11: [6, 10, 15],
+        12: [8, 13, 17],
+        13: [5, 12, 20, 14],
+        14: [2, 13, 23],
+        15: [11, 16],
+        16: [15, 17, 19],
+        17: [12, 16],
+        18: [10, 19],
+        19: [16, 18, 20, 22],
+        20: [13, 19],
+        21: [9, 22],
+        22: [19, 21, 23],
+        23: [14, 22]
+        }
+        x = 0
+        # iterate through all board pieces
+        for i in self.game.board:
+            # if the current space belongs to the current player
+            if i == self.game.current_player:
+                # iterate through neighbors to find that spot
+                for key, value in neighbors.items():
+                    # check if the neighboring spots are occupied
+                    for neighbor in value:
+                        if self.game.board[neighbor] == 0 and not self.game.board[key]:
+                            # The neighbor is not occupied, valid move is possible
+                            return True
+        # No valid moves found
+        return False
 
     def setup_board(self):
         validLoc = [(0, 0), (0, 3), (0, 6), (1, 1), (1, 3), (1, 5), (2, 2), (2, 3), (2, 4),
@@ -81,7 +134,7 @@ class NineMansMorrisGUI(tk.Tk):
             button.config(text=str(' '))
             print(f'player: {self.game.current_player} Pieces remaining: {self.game.piece_count[self.game.current_player] - self.game.pieces_placed[self.game.current_player]}')
             self.game.can_remove = False
-            self.game.switch_player()
+            self.switch_player_and_check_game_over()
             # if self.playComp == True:
             #     self.computerMove()
 
@@ -94,7 +147,7 @@ class NineMansMorrisGUI(tk.Tk):
                 print(f'player {self.game.current_player} can remove an opponents piece')
                 self.game.can_remove = True
             else:
-                self.game.switch_player()
+                self.switch_player_and_check_game_over()
                 # if self.playComp == True:
                 #     self.computerMove()
 
@@ -129,8 +182,13 @@ class NineMansMorrisGUI(tk.Tk):
                 else:
                     # if self.playComp == True:
                     #     self.computerMove()
-                    self.game.switch_player()
+                    self.switch_player_and_check_game_over()
+                    
 
+   
+                    
+
+    
 if __name__ == '__main__':
     app = NineMansMorrisGUI()
     app.mainloop()
