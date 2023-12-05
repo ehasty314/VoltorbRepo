@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 from tkinter import messagebox
 from PieceLogic import Locations
 
@@ -183,7 +184,54 @@ class NineMansMorrisGUI(tk.Tk):
                     #     self.computerMove()
                     self.switch_player_and_check_game_over()
                     
+    def place_computer_piece(self):
+        computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
 
+        if computer_pieces:
+            # Computer piece is already on the board, try to place a piece in a neighbor spot
+            for piece_index in computer_pieces:
+                neighbors = self.get_neighbors(piece_index)
+                for neighbor in neighbors:
+                    if self.game.board[neighbor] == 0:
+                        # Place a piece in the empty neighbor spot
+                        self.game.place_piece(neighbor)
+                        return
+        else:
+            # Computer piece is not on the board, find an empty spot to place a piece
+            empty_spots = [index for index, piece in enumerate(self.game.board) if piece == 0]
+            if empty_spots:
+                # Place a piece in a random empty spot
+                random_spot = random.choice(empty_spots)
+                self.game.place_piece(random_spot)
+
+    def get_neighbors(self, index):
+        neighbors = {
+        0: [1, 9],
+        1: [0, 2, 4],
+        2: [1, 14],
+        3: [4, 10],
+        4: [3, 1, 7, 5],
+        5: [4, 13],
+        6: [7, 11],
+        7: [6, 4, 8],
+        8: [7, 12],
+        9: [0, 10, 21],
+        10: [3, 9, 11, 18],
+        11: [6, 10, 15],
+        12: [8, 13, 17],
+        13: [5, 12, 20, 14],
+        14: [2, 13, 23],
+        15: [11, 16],
+        16: [15, 17, 19],
+        17: [12, 16],
+        18: [10, 19],
+        19: [16, 18, 20, 22],
+        20: [13, 19],
+        21: [9, 22],
+        22: [19, 21, 23],
+        23: [14, 22]
+        }
+        return neighbors[index]
    
                     
 
