@@ -5,7 +5,7 @@ from PieceLogic import Locations
 from GUIReplay import Replay
 
 class NineMansMorrisGUI(tk.Tk):
-      def __init__(self):
+    def __init__(self):
         super().__init__()
         self.title('Nine Mans Morris')
         self.geometry('900x600')
@@ -14,6 +14,7 @@ class NineMansMorrisGUI(tk.Tk):
         #Testing
         self.start_frame.pack(expand=True)
         print("Start frame created and packed successfully")
+
 
 class GameFrame(tk.Frame):
     def __init__(self, master):
@@ -24,6 +25,7 @@ class GameFrame(tk.Frame):
         self.buttons = {}
         self.button_pressed = False
         self.selected_piece = -1
+        self.setup_board()
 
     def switch_player_and_check_game_over(self):
         self.game.switch_player()
@@ -35,23 +37,6 @@ class GameFrame(tk.Frame):
         elif self.game.is_game_over():
             print('Game Over! Thanks for playing')
             self.destroy()
-
-    def play_vs_computer(self):
-        self.playComp = True
-        self.start_game()
-
-    def play_vs_human(self):
-        self.playComp = False
-        self.start_game()
-
-    def play_recording(self):
-        self.playComp = False
-        self.start_game()
-
-    def start_game(self):
-        # Remove the start screen and set up the game board
-        self.start_frame.destroy()
-        self.setup_board()
 
     def is_valid_move_possible(self):
         neighbors = {
@@ -296,8 +281,8 @@ class StartFrame(tk.Frame):
         self.game.pack()
 
     def play_recording(self):
-      self.master.withdraw()
-      self.game = ReplayFrame(self.master)
+        self.master.withdraw()
+        self.game = ReplayFrame(self.master)
 
 
 class ReplayFrame(tk.Frame):
