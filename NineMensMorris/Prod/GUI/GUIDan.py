@@ -233,9 +233,30 @@ class NineMansMorrisGUI(tk.Tk):
         }
         return neighbors[index]
    
-                    
+    def remove_random_player_piece(self):
+        player_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
+        if player_pieces:
+            # Randomly select a player piece
+            piece_to_remove = random.choice(player_pieces)
+            self.game.remove_opponent_piece(piece_to_remove)            
 
-    
+    def move_computer_piece(self):
+        computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
+        
+        if computer_pieces:
+            # Randomly select a computer piece
+            selected_piece = random.choice(computer_pieces)
+            
+            # Check neighbors for empty spaces and move if possible
+            neighbors = self.get_neighbors(selected_piece)
+            empty_neighbors = [neighbor for neighbor in neighbors if self.game.board[neighbor] == 0]
+            
+            if empty_neighbors:
+                # Move the piece to a random empty neighbor
+                new_position = random.choice(empty_neighbors)
+                self.game.move_piece(selected_piece, new_position)
+
+
 if __name__ == '__main__':
     app = NineMansMorrisGUI()
     app.mainloop()
