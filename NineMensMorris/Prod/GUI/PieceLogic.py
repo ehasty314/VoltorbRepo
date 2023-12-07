@@ -206,6 +206,57 @@ class Locations:
         else:
             return False
 
+    def is_valid_move_possible(self):
+        neighbors = {
+        0: [1, 9],
+        1: [0, 2, 4],
+        2: [1, 14],
+        3: [4, 10],
+        4: [3, 1, 7, 5],
+        5: [4, 13],
+        6: [7, 11],
+        7: [6, 4, 8],
+        8: [7, 12],
+        9: [0, 10, 21],
+        10: [3, 9, 11, 18],
+        11: [6, 10, 15],
+        12: [8, 13, 17],
+        13: [5, 12, 20, 14],
+        14: [2, 13, 23],
+        15: [11, 16],
+        16: [15, 17, 19],
+        17: [12, 16],
+        18: [10, 19],
+        19: [16, 18, 20, 22],
+        20: [13, 19],
+        21: [9, 22],
+        22: [19, 21, 23],
+        23: [14, 22]
+        }
+        # iterate through all board pieces
+        for i in self.board:
+            # if the current space belongs to the current player
+            if i == self.current_player:
+                # iterate through neighbors to find that spot
+                for key, value in neighbors.items():
+                    # check if the neighboring spots are occupied
+                    for neighbor in value:
+                        if self.board[neighbor] == 0 and not self.board[key]:
+                            # The neighbor is not occupied, valid move is possible
+                            return True
+        # No valid moves found
+        return False
+
+    def check_game_over(self):
+        if not self.is_valid_move_possible() and self.turn_count > 2 and not self.can_fly():
+            print('Game Over! Thanks for playing')
+            return True
+        elif self.is_game_over():
+            print('Game Over! Thanks for playing')
+            return True
+        else:
+            return False
+
     def increment_turn(self):
         self.turn_count += 1
 

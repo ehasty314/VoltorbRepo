@@ -158,6 +158,16 @@ class SixMensMorrisLogic:
         else:
             return False
 
+    def check_game_over(self):
+        if not self.is_valid_move_possible() and self.turn_count > 2:
+            print('Game Over! Thanks for playing')
+            return True
+        elif self.is_game_over():
+            print('Game Over! Thanks for playing')
+            return True
+        else:
+            return False
+
     def increment_turn(self):
         self.turn_count += 1
 

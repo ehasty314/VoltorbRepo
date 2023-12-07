@@ -42,59 +42,14 @@ class GameFrame(tk.Frame):
             23: [14, 22]
         }
 
-
     def switch_player_and_check_game_over(self):
-        if not self.is_valid_move_possible() and self.game.turn_count > 2 and not self.game.can_fly():
-            print('Game Over! Thanks for playing')
-            self.destroy()
-        elif self.game.is_game_over():
-            print('Game Over! Thanks for playing')
+        if self.game.check_game_over():
             self.destroy()
         else:
             # Switch player and check if it's the computer player's turn
             self.game.switch_player()
             self.game.turn_count += 1
 
-    def is_valid_move_possible(self):
-        neighbors = {
-        0: [1, 9],
-        1: [0, 2, 4],
-        2: [1, 14],
-        3: [4, 10],
-        4: [3, 1, 7, 5],
-        5: [4, 13],
-        6: [7, 11],
-        7: [6, 4, 8],
-        8: [7, 12],
-        9: [0, 10, 21],
-        10: [3, 9, 11, 18],
-        11: [6, 10, 15],
-        12: [8, 13, 17],
-        13: [5, 12, 20, 14],
-        14: [2, 13, 23],
-        15: [11, 16],
-        16: [15, 17, 19],
-        17: [12, 16],
-        18: [10, 19],
-        19: [16, 18, 20, 22],
-        20: [13, 19],
-        21: [9, 22],
-        22: [19, 21, 23],
-        23: [14, 22]
-        }
-        # iterate through all board pieces
-        for i in self.game.board:
-            # if the current space belongs to the current player
-            if i == self.game.current_player:
-                # iterate through neighbors to find that spot
-                for key, value in neighbors.items():
-                    # check if the neighboring spots are occupied
-                    for neighbor in value:
-                        if self.game.board[neighbor] == 0 and not self.game.board[key]:
-                            # The neighbor is not occupied, valid move is possible
-                            return True
-        # No valid moves found
-        return False
 
     def setup_board(self):
     # testing
@@ -229,13 +184,16 @@ class GameFrame(tk.Frame):
 
     def computerMove(self):
         print(f"Computer's turn - Player {self.game.current_player}")
-        if self.game.can_place_piece():
-            print("Computer can place piece")
-            self.place_computer_piece()
-            self.update_gui()
+        if self.game.check_game_over():
+            self.destroy()
         else:
-            self.move_computer_piece()
-            self.update_gui()
+            if self.game.can_place_piece():
+                print("Computer can place piece")
+                self.place_computer_piece()
+                self.update_gui()
+            else:
+                self.move_computer_piece()
+                self.update_gui()
 
     def update_gui(self):
         for index, piece in enumerate(self.game.board):

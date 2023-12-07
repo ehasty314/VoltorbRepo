@@ -123,17 +123,15 @@ class SixMensMorris(tk.Frame):
                         self.computerMove()
 
     def switch_player_and_check_game_over(self):
-        if not self.game.is_valid_move_possible() and self.game.turn_count > 2:
-            print('Game Over! Thanks for playing')
-            self.destroy()
-        elif self.game.is_game_over():
-            print('Game Over! Thanks for playing')
+        if self.game.check_game_over():
             self.destroy()
         else:
             # Switch player and check if it's the computer player's turn
             self.game.switch_player()
             self.game.turn_count += 1
-    #
+
+
+
     def get_neighbors(self, index):
         return self.game.neighbors[index]
 
@@ -159,13 +157,16 @@ class SixMensMorris(tk.Frame):
 
     def computerMove(self):
         print(f"Computer's turn - Player {self.game.current_player}")
-        if self.game.can_place_piece():
-            print("Computer can place piece")
-            self.place_computer_piece()
-            self.update_gui()
+        if self.game.check_game_over():
+            self.destroy()
         else:
-            self.move_computer_piece()
-            self.update_gui()
+            if self.game.can_place_piece():
+                print("Computer can place piece")
+                self.place_computer_piece()
+                self.update_gui()
+            else:
+                self.move_computer_piece()
+                self.update_gui()
 
     def update_gui(self):
         for index, piece in enumerate(self.game.board):
