@@ -24,8 +24,11 @@ class NineMansMorrisGUI(tk.Tk):
         self.button_pressed = False
         self.selected_piece = -1
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.playComp = False
         self.setup_board()
+=======
+>>>>>>> parent of 3b03141 (comp player)
 =======
 >>>>>>> parent of 3b03141 (comp player)
 
@@ -277,6 +280,7 @@ class NineMansMorrisGUI(tk.Tk):
                 new_position = random.choice(empty_neighbors)
                 self.game.move_piece(selected_piece, new_position)
 
+<<<<<<< HEAD
 
 class StartFrame(tk.Frame):
     def __init__(self, master):
@@ -311,6 +315,8 @@ class ReplayFrame(tk.Frame):
 
         self.replay = Replay()
 
+=======
+>>>>>>> parent of 3b03141 (comp player)
 
 if __name__ == '__main__':
     app = NineMansMorrisGUI()
