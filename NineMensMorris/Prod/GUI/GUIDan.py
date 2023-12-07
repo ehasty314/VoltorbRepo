@@ -3,7 +3,7 @@ import random
 from tkinter import messagebox
 from PieceLogic import Locations
 from GUIReplay import Replay
-
+from SixMensMorrisGUI import SixMensMorris
 
 class NineMansMorrisGUI(tk.Tk):
     def __init__(self):
@@ -275,6 +275,7 @@ class StartFrame(tk.Frame):
         tk.Button(self, text="Play Recording", command=self.play_recording).pack(pady=10)
 
         self.game = None
+        self.NewFrame = None
 
     def play_vs_computer(self):
         self.master.withdraw()  # Hide the current frame
@@ -282,18 +283,34 @@ class StartFrame(tk.Frame):
         self.game.pack()
 
     def play_vs_human(self):
-        self.game = GameFrame(self.master)
+        self.NewFrame = WhichMorris(self.master)
         self.destroy()
-        self.game.pack()
+        self.NewFrame.pack()
 
     def play_recording(self):
         self.master.withdraw()
         self.game = ReplayFrame(self.master)
 
-# class WhichMorris(tk.Frame):
-#     def __init__(self, master):
-#         super().__init__(master)
-#         self.master = master
+
+class WhichMorris(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
+
+        tk.Button(self, text="Play Six Mens Morris", command=self.play_six).pack(pady=10)
+        tk.Button(self, text="Play Nine Mens Morris", command=self.play_nine).pack(pady=10)
+
+        self.game = None
+
+    def play_six(self):
+        self.game = SixMensMorris(self.master)
+        self.destroy()
+        self.game.pack()
+
+    def play_nine(self):
+        self.game = GameFrame(self.master)
+        self.destroy()
+        self.game.pack()
 
 
 class ReplayFrame(tk.Frame):
