@@ -4,6 +4,7 @@ from tkinter import messagebox
 from PieceLogic import Locations
 from GUIReplay import Replay
 
+
 class NineMansMorrisGUI(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -81,21 +82,26 @@ class GameFrame(tk.Frame):
 
     def setup_board(self):
     # testing
-      print("Setting up the board")
-      valid_loc = [(0, 0), (0, 3), (0, 6), (1, 1), (1, 3), (1, 5), (2, 2), (2, 3), (2, 4),
-                 (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6),
-                 (4, 2), (4, 3), (4, 4), (5, 1), (5, 3), (5, 5), (6, 0), (6, 3), (6, 6)]
+        valid_loc = [(0, 0), (0, 3), (0, 6), (1, 1), (1, 3), (1, 5), (2, 2), (2, 3), (2, 4),
+                     (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6),
+                     (4, 2), (4, 3), (4, 4), (5, 1), (5, 3), (5, 5), (6, 0), (6, 3), (6, 6)]
 
-      for row in range(7):
-        for col in range(7):
-            if (row, col) in valid_loc:
-                index = valid_loc.index((row, col))
-                button = tk.Button(self, text=' ', width=10, height=3,
-                                   command=lambda idx=index: self.handle_click(self.buttons[idx], idx))
-                button.grid(row=row, column=col)
-                self.buttons[index] = button
-            else:
-                tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
+        canvas = tk.Canvas(self, width=900, height=600, background='grey')
+
+        canvas.create_rectangle(25, 25, 525, 375, disabledfill='grey', outline='black', width=5)
+        canvas.create_rectangle(110, 80, 450, 310, disabledfill='grey', outline='black', width=5)
+        canvas.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+
+        for row in range(7):
+            for col in range(7):
+                if (row, col) in valid_loc:
+                    index = valid_loc.index((row, col))
+                    button = tk.Button(canvas, text=' ', width=10, height=3,
+                                       command=lambda idx=index: self.handle_click(self.buttons[idx], idx))
+                    button.grid(row=row, column=col)
+                    self.buttons[index] = button
+                else:
+                    tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
     #   self.bind_buttons()
     #
     # def bind_buttons(self):
@@ -283,6 +289,11 @@ class StartFrame(tk.Frame):
     def play_recording(self):
         self.master.withdraw()
         self.game = ReplayFrame(self.master)
+
+# class WhichMorris(tk.Frame):
+#     def __init__(self, master):
+#         super().__init__(master)
+#         self.master = master
 
 
 class ReplayFrame(tk.Frame):
