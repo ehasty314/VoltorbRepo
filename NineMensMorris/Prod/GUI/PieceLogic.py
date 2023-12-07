@@ -71,18 +71,17 @@ class Locations:
         """
         self.current_player = 3 - self.current_player  # Switches between 1 and 2
 
-
     def update_mill(self):
-   # upkeeps list of mills for each player. returns True If a new mill has formed since last update.
-   # assumption this method is called after every click
+        # upkeeps list of mills for each player. returns True If a new mill has formed since last update.
+        # assumption this method is called after every click
         mills = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Horizontal mills in the outer square
-                [9, 10, 11], [12, 13, 14], [15, 16, 17],  # Horizontal mills in the middle square
-                [18, 19, 20], [21, 22, 23],  # Horizontal mills in the inner square
-                [0, 9, 21], [3, 10, 18], [6, 11, 15],  # Vertical mills in the left side
-                [1, 4, 7], [16, 19, 22],  # Vertical mills in the middle
-                [8, 12, 17], [5, 13, 20], [2, 14, 23]  # Vertical mills in the right side
-            ]
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Horizontal mills in the outer square
+            [9, 10, 11], [12, 13, 14], [15, 16, 17],  # Horizontal mills in the middle square
+            [18, 19, 20], [21, 22, 23],  # Horizontal mills in the inner square
+            [0, 9, 21], [3, 10, 18], [6, 11, 15],  # Vertical mills in the left side
+            [1, 4, 7], [16, 19, 22],  # Vertical mills in the middle
+            [8, 12, 17], [5, 13, 20], [2, 14, 23]  # Vertical mills in the right side
+        ]
         new_mill = False
         for mill in mills:
             counts = 0
@@ -108,7 +107,6 @@ class Locations:
                     self.player_mills[1].remove(mill)
                 if mill in self.player_mills[2]:
                     self.player_mills[2].remove(mill)
-
         return new_mill
 
 

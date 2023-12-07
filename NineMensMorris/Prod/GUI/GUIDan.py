@@ -27,12 +27,12 @@ class StartFrame(tk.Frame):
         self.game = None
 
     def play_vs_computer(self):
-        self.master.withdraw()  # Hide the current frame
-        self.game = GameFrame(self.master)
+        self.game = WhichMorris(self.master, play_comp=True)
+        self.destroy()
         self.game.pack()
 
     def play_vs_human(self):
-        self.game = WhichMorris(self.master)
+        self.game = WhichMorris(self.master, play_comp=False)
         self.destroy()
         self.game.pack()
 
@@ -42,9 +42,10 @@ class StartFrame(tk.Frame):
 
 
 class WhichMorris(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, play_comp):
         super().__init__(master)
         self.master = master
+        self.play_comp = play_comp
 
         tk.Button(self, text="Play Six Mens Morris", command=self.play_six).pack(pady=10)
         tk.Button(self, text="Play Nine Mens Morris", command=self.play_nine).pack(pady=10)
@@ -66,13 +67,13 @@ class WhichMorris(tk.Frame):
         self.button.destroy()
 
     def play_six(self):
-        self.game = SixMensMorris(self.master)
+        self.game = SixMensMorris(self.master, self.play_comp)
         self.new_game_button()
         self.destroy()
         self.game.pack()
 
     def play_nine(self):
-        self.game = GameFrame(self.master)
+        self.game = GameFrame(self.master, self.play_comp)
         self.new_game_button()
         self.destroy()
         self.game.pack()

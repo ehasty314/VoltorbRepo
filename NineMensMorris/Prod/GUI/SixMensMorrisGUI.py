@@ -5,9 +5,9 @@ from GUIReplay import Replay
 
 
 class SixMensMorris(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, play_comp):
         super().__init__(master)
-        # self.play_comp = play_comp
+        self.play_comp = play_comp
 
         self.game = SixMensMorrisLogic()
         self.buttons = {}
@@ -39,40 +39,39 @@ class SixMensMorris(tk.Frame):
                     tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
 
 
-    def handle_click(self, button, index):
-        print("handle_click called")
+    def handle_click(self, button,index):
+      print("handle_click called")
 
-        if self.game.is_game_over():
-            print('Game Over! Thanks for playing')
-            self.master.destroy()
-        elif self.game.can_remove:
-            # always remove if possible
-            print('remove opponent piece')
-            self.handle_remove(button, index)
+      if self.game.is_game_over():
+        print('Game Over! Thanks for playing')
+        self.master.destroy()
+      elif self.game.can_remove:
+        # always remove if possible
+        print('remove opponent piece')
+        self.handle_remove(button,index)
+      else:
+        if self.game.can_place_piece():
+            # placing phase handling
+            self.handle_place(button,index)
         else:
-            if self.game.can_place_piece():
-                # placing phase handling
-                self.handle_place(button, index)
+            # select a piece or move selected piece
+            if self.selected_piece != -1:
+                print('where do you want to move')
+                self.handle_move(button,index)
             else:
-                # select a piece or move selected piece
-                if self.selected_piece != -1:
-                    print('where do you want to move')
-                    self.handle_move(button, index)
-                else:
-                    print('select a piece')
-                    self.handle_select(button, index)
+                print('select a piece')
+                self.handle_select(button,index)
 
-    def handle_remove(self, button, index):
+    def handle_remove(self, button,index):
         print("handle_remove called")
         # GUI update and some logic, removing a piece is always end of turn
         if self.game.remove_opponent_piece(index):
             button.config(text=str(' '))
-            print(
-                f'player: {self.game.current_player} Pieces remaining: {self.game.piece_count[self.game.current_player] - self.game.pieces_placed[self.game.current_player]}')
+            print(f'player: {self.game.current_player} Pieces remaining: {self.game.piece_count[self.game.current_player] - self.game.pieces_placed[self.game.current_player]}')
             self.game.can_remove = False
             self.switch_player_and_check_game_over()
-            # if self.playComp == True:
-            #     self.computerMove()
+            if self.play_comp == True:
+                self.computerMove()
 
     def handle_place(self, button, index):
         print("handle_place called")
@@ -85,10 +84,10 @@ class SixMensMorris(tk.Frame):
                 self.game.can_remove = True
             else:
                 self.switch_player_and_check_game_over()
-                # if self.playComp == True:
-                #     self.computerMove()
+                if self.play_comp:
+                    self.computerMove()
 
-    def handle_select(self, button, index):
+    def handle_select(self,button, index):
         print("handle_select called")
         # select a piece to move if not already done
         if self.game.board[index] == self.game.current_player:
@@ -103,7 +102,7 @@ class SixMensMorris(tk.Frame):
         if self.game.board[newspace] == self.game.current_player:
             # if the player selects another one of their own pieces, change selected piece
             self.buttons[self.selected_piece].config(fg='black')
-            self.handle_select(button, newspace)
+            self.handle_select(button,newspace)
         else:
             if self.game.move_piece(self.selected_piece, newspace):
                 # if a valid move occurs, then update the buttons, clear selected piece
@@ -119,92 +118,127 @@ class SixMensMorris(tk.Frame):
                     print(f'player {self.game.current_player} can remove an opponents piece')
                     self.game.can_remove = True
                 else:
-                    # if self.playComp == True:
-                    #     self.computerMove()
                     self.switch_player_and_check_game_over()
+                    if self.play_comp == True:
+                        self.computerMove()
 
     def switch_player_and_check_game_over(self):
-        self.game.switch_player()
-        self.game.turn_count += 1
-
         if not self.game.is_valid_move_possible() and self.game.turn_count > 2:
             print('Game Over! Thanks for playing')
             self.destroy()
         elif self.game.is_game_over():
             print('Game Over! Thanks for playing')
             self.destroy()
+        else:
+            # Switch player and check if it's the computer player's turn
+            self.game.switch_player()
+            self.game.turn_count += 1
     #
-    # def place_computer_piece(self):
-    #     computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
-    #
-    #     if computer_pieces:
-    #         # Computer piece is already on the board, try to place a piece in a neighbor spot
-    #         for piece_index in computer_pieces:
-    #             neighbors = self.get_neighbors(piece_index)
-    #             for neighbor in neighbors:
-    #                 if self.game.board[neighbor] == 0:
-    #                     # Place a piece in the empty neighbor spot
-    #                     self.game.place_piece(neighbor)
-    #                     return
-    #     else:
-    #         # Computer piece is not on the board, find an empty spot to place a piece
-    #         empty_spots = [index for index, piece in enumerate(self.game.board) if piece == 0]
-    #         if empty_spots:
-    #             # Place a piece in a random empty spot
-    #             random_spot = random.choice(empty_spots)
-    #             self.game.place_piece(random_spot)
-    #
-    # def get_neighbors(self, index):
-    #     neighbors = {
-    #         0: [1, 9],
-    #         1: [0, 2, 4],
-    #         2: [1, 14],
-    #         3: [4, 10],
-    #         4: [3, 1, 7, 5],
-    #         5: [4, 13],
-    #         6: [7, 11],
-    #         7: [6, 4, 8],
-    #         8: [7, 12],
-    #         9: [0, 10, 21],
-    #         10: [3, 9, 11, 18],
-    #         11: [6, 10, 15],
-    #         12: [8, 13, 17],
-    #         13: [5, 12, 20, 14],
-    #         14: [2, 13, 23],
-    #         15: [11, 16],
-    #         16: [15, 17, 19],
-    #         17: [12, 16],
-    #         18: [10, 19],
-    #         19: [16, 18, 20, 22],
-    #         20: [13, 19],
-    #         21: [9, 22],
-    #         22: [19, 21, 23],
-    #         23: [14, 22]
-    #     }
-    #     return neighbors[index]
-    #
-    # def remove_random_player_piece(self):
-    #     player_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
-    #     if player_pieces:
-    #         # Randomly select a player piece
-    #         piece_to_remove = random.choice(player_pieces)
-    #         self.game.remove_opponent_piece(piece_to_remove)
-    #
-    # def move_computer_piece(self):
-    #     computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
-    #
-    #     if computer_pieces:
-    #         # Randomly select a computer piece
-    #         selected_piece = random.choice(computer_pieces)
-    #
-    #         # Check neighbors for empty spaces and move if possible
-    #         neighbors = self.get_neighbors(selected_piece)
-    #         empty_neighbors = [neighbor for neighbor in neighbors if self.game.board[neighbor] == 0]
-    #
-    #         if empty_neighbors:
-    #             # Move the piece to a random empty neighbor
-    #             new_position = random.choice(empty_neighbors)
-    #             self.game.move_piece(selected_piece, new_position)
+    def get_neighbors(self, index):
+        return self.game.neighbors[index]
+
+    # def computerMillCheck(self):
+    #     if self.game.update_mill():
+    #         self.remove_random_player_piece()
+
+    def remove_random_player_piece(self):
+        # Check if the can_remove flag is set
+        opponent_pieces = [index for index, piece in enumerate(self.game.board) if piece == 1]
+
+        if opponent_pieces:
+            # Randomly select an opponent piece
+            piece_to_remove = random.choice(opponent_pieces)
+            while self.game.remove_opponent_piece(piece_to_remove) is False:
+                # Ensure that the selected piece is not part of a mill
+                piece_to_remove = random.choice(opponent_pieces)
+            self.buttons[piece_to_remove].config(text='')
+            # Update the GUI after removing a piece
+            self.update_gui()
+            # After removing a piece, switch player and check game over
+            self.switch_player_and_check_game_over()
+
+    def computerMove(self):
+        print(f"Computer's turn - Player {self.game.current_player}")
+        if self.game.can_place_piece():
+            print("Computer can place piece")
+            self.place_computer_piece()
+            self.update_gui()
+        else:
+            self.move_computer_piece()
+            self.update_gui()
+
+    def update_gui(self):
+        for index, piece in enumerate(self.game.board):
+            if piece != 0:
+                self.buttons[index].config(text=str(piece))
+
+    def get_valid_move(self):
+        computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
+        for piece_index in computer_pieces:
+            neighbors = self.get_neighbors(piece_index)
+            for neighbor in neighbors:
+                if self.game.board[neighbor] == 0:
+                    return piece_index, neighbor
+
+    def move_computer_piece(self):
+        moveFrom,moveTo = self.get_valid_move()
+
+        # Update the GUI after moving the piece
+        self.buttons[moveFrom].config(text=' ')
+        self.buttons[moveTo].config(text=str(self.game.current_player))
+        self.game.move_piece(moveFrom,moveTo)
+
+        # Check if a mill is formed after the move
+        if self.game.update_mill():
+            # Remove a player piece if a mill is formed
+            self.remove_random_player_piece()
+            return True
+        else:
+            self.switch_player_and_check_game_over()  # Switch the turn after moving a piece
+        return True
+
+    def place_computer_piece(self):
+        computer_pieces = [index for index, piece in enumerate(self.game.board) if piece == self.game.current_player]
+        valid_neighbors = []
+        if computer_pieces:
+            # Computer piece is already on the board, try to place a piece in a neighbor spot
+            for piece_index in computer_pieces:
+                neighbors = self.get_neighbors(piece_index)
+                for neighbor in neighbors:
+                    if self.game.board[neighbor] == 0:
+                        valid_neighbors.append(neighbor)
+            place_piece = random.choice(valid_neighbors)
+            self.game.place_piece(place_piece)
+                        # Check for mills after placing a piece
+            if self.game.update_mill():
+                print(f'player {self.game.current_player} can remove an opponents piece')
+                # After forming a mill, check if it's the computer player's turn to remove a piece
+                if self.play_comp and self.game.current_player == 2:
+                    self.after(100, self.remove_random_player_piece)
+                else:
+                    # If it's not the computer player's turn, switch player and check game over
+                    self.after(100, self.switch_player_and_check_game_over)
+            else:
+                self.switch_player_and_check_game_over()
+
+        else:
+            # Computer piece is not on the board, find an empty spot to place a piece
+            empty_spots = [index for index, piece in enumerate(self.game.board) if piece == 0]
+            if empty_spots:
+                # Place a piece in a random empty spot
+                random_spot = random.choice(empty_spots)
+                self.game.place_piece(random_spot)
+                # Check for mills after placing a piece
+                if self.game.update_mill():
+                    print(f'player {self.game.current_player} can remove an opponents piece')
+                    # After forming a mill, check if it's the computer player's turn to remove a piece
+                    if self.play_comp and self.game.current_player == 2:
+                        self.after(100, self.remove_random_player_piece)
+                    else:
+                        # If it's not the computer player's turn, switch player and check game over
+                        self.after(100, self.switch_player_and_check_game_over)
+                else:
+                    self.switch_player_and_check_game_over()
 
 
 if __name__ == '__main__':
