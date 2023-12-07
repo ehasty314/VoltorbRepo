@@ -72,7 +72,7 @@ class Locations:
         self.current_player = 3 - self.current_player  # Switches between 1 and 2
 
 
-    def update_mill(self, piece_index=None):
+    def update_mill(self):
    # upkeeps list of mills for each player. returns True If a new mill has formed since last update.
    # assumption this method is called after every click
         mills = [
@@ -102,8 +102,6 @@ class Locations:
                     if mill not in self.player_mills[2]:
                         self.player_mills[2].append(mill)
                         new_mill = True
-                # Set can_remove flag if a new mill is formed
-                self.can_remove = new_mill
             else:
                 # no player has this mill currently. Update list of mills
                 if mill in self.player_mills[1]:
@@ -137,7 +135,7 @@ class Locations:
                 self.board[position] = 0
                 self.piece_count[opponent] -= 1
                 self.pieces_placed[opponent] -= 1
-                self.log.logRemove(opponent, position)
+                self.log.logRemove(self.current_player, position)
                 return True
         else:
             print("Invalid removal. Try again.")
