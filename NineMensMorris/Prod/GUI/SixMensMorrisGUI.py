@@ -38,6 +38,7 @@ class SixMensMorris(tk.Frame):
                 else:
                     tk.Label(self, text=' ', width=10, height=3).grid(row=row, column=col)
 
+
     def handle_click(self, button, index):
         print("handle_click called")
 
