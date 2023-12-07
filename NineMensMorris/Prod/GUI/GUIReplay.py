@@ -81,11 +81,36 @@ class Replay(tk.Tk):
         self.buttons[index].config(text=value, state='disabled')
 
     def automate_next(self):
-        delay = int(self.delay_button.get())
+      delay = int(self.delay_button.get())
 
-        while self.current_play < self.row_count:
-          time.sleep(delay)
-          self.next()
+      if delay == 0:
+        # Call next method continuously
+        self.auto_button.config(state='disabled')
+        self.continuous_automation()
+      else:
+        # Call next method with a delay
+        self.auto_button.config(state='disabled')
+        self.delayed_automation(delay)
+
+    def continuous_automation(self):
+      # Check if there are more moves
+      if self.current_play < self.row_count:
+        # Call next method and schedule the next call
+        self.next()
+        self.after(1000, self.continuous_automation)  # Adjust the delay as needed
+      else:
+        print("Game over")
+        self.auto_button.config(state='normal')
+
+    def delayed_automation(self, delay):
+      # Check if there are more moves
+      if self.current_play < self.row_count:
+        # Call next method and schedule the next call with a delay
+        self.next()
+        self.after(delay * 1000, self.delayed_automation, delay)
+      else:
+        print("Game over")
+        self.auto_button.config(state='normal')
 
     def next(self):
         if self.current_play < self.row_count:
