@@ -275,7 +275,6 @@ class StartFrame(tk.Frame):
         tk.Button(self, text="Play Recording", command=self.play_recording).pack(pady=10)
 
         self.game = None
-        self.NewFrame = None
 
     def play_vs_computer(self):
         self.master.withdraw()  # Hide the current frame
@@ -283,9 +282,9 @@ class StartFrame(tk.Frame):
         self.game.pack()
 
     def play_vs_human(self):
-        self.NewFrame = WhichMorris(self.master)
+        self.game = WhichMorris(self.master)
         self.destroy()
-        self.NewFrame.pack()
+        self.game.pack()
 
     def play_recording(self):
         self.master.withdraw()
